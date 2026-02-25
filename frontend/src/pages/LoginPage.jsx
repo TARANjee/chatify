@@ -33,7 +33,7 @@ function LoginPage() {
                     Welcome Back
                   </h2>
                   <p className="text-slate-400">
-                    Login to access to your account
+                    Login to access your account
                   </p>
                 </div>
 
@@ -89,7 +89,7 @@ function LoginPage() {
                 </form>
                 {/* SIGNUP LINK */}
                 <div className="text-center mt-6">
-                  <Link to="/signup" className="auth-link">Don't have a account? Sign Up</Link>
+                  <Link to="/signup" className="auth-link">Don't have an account? Sign Up</Link>
                 </div>
 
               </div>
