@@ -4,6 +4,7 @@ import User from '../models/User.js'
 
 export const protectRoute = async(req, res, next) => {
     try{
+        console.log("Cookies:", req.cookies)
         const token = req.cookies.jwt
         if(!token)  return res.status(401).json({message:"Unauthorized - No token provided"})
         
