@@ -24,7 +24,7 @@ function ContactList() {
             {/* TODO: add online status and make work with socket */}
             <div className={`avatar online`}>
               <div className="size-12 rounded-full">
-                <img src={contact.profilepic || "/avatar.png"} />
+                <img src={contact.profilepic || "/avatar.png"} alt={contact.username} />
               </div>
             </div>
             <h4 className="text-slate-200 font-medium">{contact.username}</h4>
