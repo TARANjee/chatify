@@ -4,14 +4,14 @@ import ProfileHeader from "../components/ProfileHeader"
 import ActiveTabSwitch from "../components/ActiveTabSwitch"
 import ChatList from "../components/ChatList"
 import ContactList from "../components/ContactList"
-import ChatWindow from "../components/ChatWindow"
+import ChatContainer from "../components/ChatContainer"
 import EmptyState from "../components/EmptyState"
 
 
 
 function ChatPage() {
 
-  const { activeTab,selectedChat } = useChatStore()
+  const { activeTab, selectedUser } = useChatStore()
   return (
     <div className=" relative w-full max-w-6xl h-[650px]">
 
@@ -28,7 +28,7 @@ function ChatPage() {
 
       {/* right side */}
       <div className="flex-1 flex flex-col bg-slate-900/50 backdrop-blur-sm">
-      {selectedChat ? <ChatWindow /> : <EmptyState />}
+          {selectedUser ? <ChatContainer /> : <EmptyState />}
       </div>
     </BorderAnimatedContainer>
     </div>
