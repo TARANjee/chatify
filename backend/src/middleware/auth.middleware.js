@@ -3,8 +3,7 @@ import {ENV} from '../lib/env.js'
 import User from '../models/User.js'
 
 export const protectRoute = async(req, res, next) => {
-    try{
-        console.log("Cookies:", req.cookies)
+    try{ 
         const token = req.cookies.jwt
         if(!token)  return res.status(401).json({message:"Unauthorized - No token provided"})
         
@@ -14,7 +13,7 @@ export const protectRoute = async(req, res, next) => {
         const user =await User.findById(decoded.userId).select("-password")
         if(!user) return res.status(404).json({message:"Unauthorized - User not found"})
         
-            console.log("Decoded user from token:", user)
+    
         req.user = user
         next();
     }
