@@ -1,6 +1,7 @@
 import { useState, useRef } from "react"
 import { LogOutIcon, VolumeOffIcon, Volume2Icon } from "lucide-react"
 import { useAuthStore } from "../store/useAuthStore"
+import toast from "react-hot-toast"
 
 function ProfileHeader() {
     const { authUser, logout, updateProfile } = useAuthStore()
@@ -8,19 +9,41 @@ function ProfileHeader() {
     const fileInputRef = useRef(null)
     
 
-    const handleImageUpload = (e) => {
-        const file = e.target.files[0]
-        if (!file) return
+    const handleImageUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
 
-        const reader = new FileReader()
-        reader.readAsDataURL(file)
+        const MAX_SIZE = 3.75 * 1024 * 1024; // 3.75MB
 
-        reader.onloadend =async () => {
-            const base64Image=reader.result
-            setSelectedImage(base64Image)
-            await updateProfile({ profilepic: base64Image})
+        // file size validation
+        if (file.size > MAX_SIZE) {
+            toast.error("Image size must be less than 3.75MB");
+            return;
         }
-     }
+
+        const reader = new FileReader();
+
+        // handle file read error
+        reader.onerror = () => {
+            toast.error("Failed to read the image file");
+        };
+
+        reader.onloadend = async () => {
+            try {
+                const base64Image = reader.result;
+
+                setSelectedImage(base64Image);
+
+                await updateProfile({ profilepic: base64Image });
+
+            } catch (error) {
+                console.error(error);
+                toast.error("Failed to update profile image");
+            }
+        };
+
+        reader.readAsDataURL(file);
+    };
      
     return (
         <div className="p-6 border-b border-slate-700/50 ">
