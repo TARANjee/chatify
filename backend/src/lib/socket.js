@@ -14,28 +14,31 @@ const io = new Server(server, {
   },
 });
 
-// apply authentication middleware to all incoming socket connections
+// apply authentication middleware to all socket connections
 io.use(socketAuthMiddleware);
 
-// this is for storing online users
-const userSocketMap = {}; //userId:socket.id
+// we will use this function to check if the user is online or not
+export function getReceiverSocketId(userId) {
+  return userSocketMap[userId];
+}
+
+// this is for storig online users
+const userSocketMap = {}; // {userId:socketId}
 
 io.on("connection", (socket) => {
-  console.log(
-    `New socket connection: ${socket.id} for user ${socket.user.username}`,
-  );
+  console.log("A user connected", socket.user.username);
 
   const userId = socket.userId;
-  userSocketMap[userId] = socket.id; // Map userId to socket.id
-  // io.emit() is used to send events to all connected clients
-  io.emit("getOnlineUsers", Object.keys(userSocketMap)); // Broadcast updated online users list
+  userSocketMap[userId] = socket.id;
 
+  // io.emit() is used to send events to all connected clients
+  io.emit("getOnlineUsers", Object.keys(userSocketMap));
+
+  // with socket.on we listen for events from clients
   socket.on("disconnect", () => {
-    console.log(
-      `Socket disconnected: ${socket.id} for user ${socket.user.username}`,
-    );
-    delete userSocketMap[userId]; // Remove user from online users map
-    io.emit("getOnlineUsers", Object.keys(userSocketMap)); // Broadcast updated online users list
+    console.log("A user disconnected", socket.user.username);
+    delete userSocketMap[userId];
+    io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
 });
 

@@ -12,6 +12,7 @@ export const useAuthStore = create((set, get) => ({
   isSigningUp: false,
   isLoggingIn: false,
   socket: null,
+  onlineUsers: [],
 
   checkAuth: async () => {
     try {
@@ -33,7 +34,6 @@ export const useAuthStore = create((set, get) => ({
       set({ authUser: res.data });
 
       toast.success("Account created successfully!");
-
       get().connectSocket();
     } catch (error) {
       toast.error(error.response.data.message);
@@ -47,9 +47,10 @@ export const useAuthStore = create((set, get) => ({
     try {
       const res = await axiosInstance.post("/auth/login", data);
       set({ authUser: res.data });
+
       toast.success("Logged in successfully");
 
-      get().connectSocket()
+      get().connectSocket();
     } catch (error) {
       toast.error(error.response.data.message);
     } finally {
@@ -75,8 +76,8 @@ export const useAuthStore = create((set, get) => ({
       set({ authUser: res.data });
       toast.success("Profile updated successfully");
     } catch (error) {
-      console.log("Error updating profile:", error);
-      toast.error("Error updating profile");
+      console.log("Error in update profile:", error);
+      toast.error(error.response.data.message);
     }
   },
 
@@ -85,20 +86,20 @@ export const useAuthStore = create((set, get) => ({
     if (!authUser || get().socket?.connected) return;
 
     const socket = io(BASE_URL, {
-      withCredentials: true, // this ensure cookies are send with the connection
+      withCredentials: true, // this ensures cookies are sent with the connection
     });
 
     socket.connect();
 
     set({ socket });
 
-    //listen for online users event
+    // listen for online users event
     socket.on("getOnlineUsers", (userIds) => {
       set({ onlineUsers: userIds });
     });
   },
 
   disconnectSocket: () => {
-    if (get().socket?.connected) (get(), socket.disconnect());
+    if (get().socket?.connected) get().socket.disconnect();
   },
 }));
