@@ -9,6 +9,7 @@ import MessageInput from './MessageInput'
 function ChatContainer() {
   const { selectedUser, getMessagesByUserId, messages,isMessagesLoading } = useChatStore()
   const { authUser } = useAuthStore()
+  const currentUserId = authUser?.user?._id ?? authUser?._id
   const messageEndRef = useRef(null)
 
   useEffect(() => {
@@ -28,8 +29,8 @@ function ChatContainer() {
         {messages.length && !isMessagesLoading > 0 ? (
           <div className='max-w-3xl mx-auto space-y-6'>
             {messages.map(msg => (
-              <div key={msg._id} className={`chat ${msg.senderId == authUser.user._id ? "chat-end" : "chat-start"}`} >
-                <div className={`chat-bubble relative ${msg.senderId == authUser.user._id
+              <div key={msg._id} className={`chat ${msg.senderId == currentUserId ? "chat-end" : "chat-start"}`} >
+                <div className={`chat-bubble relative ${msg.senderId == currentUserId
                   ? "bg-cyan-600 text-white"
                   : "bg-slate-800 text-slate-200"
                   }`}>

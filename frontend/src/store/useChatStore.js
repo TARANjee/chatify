@@ -56,21 +56,26 @@ export const useChatStore = create((set, get) => ({
     }
   },
   sendMessage: async (messageData)=>{
-    const {selectedUser,messages}=get()
-    const {authUser}=useAuthStore.getState()
+    const { selectedUser,messages } = get();
+   const { authUser } = useAuthStore.getState();
+    const senderId = authUser?.user?._id ?? authUser?._id;
 
-const tempId=`temp-${Date.now()}`
-const optimisticMessage={
-  _id:tempId,
-  senderId:authUser.user._id,
-  receiverId:selectedUser._id,
-  text:messageData.text,
-  image:messageData.image,
-  createdAt:new Date().toISOString(),
-  isOptimistic:true
-}
+    if (!selectedUser?._id || !senderId) {
+      toast.error("Unable to send message right now");
+      return;
+    }
+const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+const optimisticMessage = {
+  _id: tempId,
+  senderId,
+  receiverId: selectedUser._id,
+  text: messageData.text,
+  image: messageData.image,
+  createdAt: new Date().toISOString(),
+  isOptimistic: true,
+};
 // Add the optimistic message to the UI immediately
-set({messages:[...messages,optimisticMessage]})
+set((state) => ({ messages: [...state.messages, optimisticMessage] }));
     try {
       const res=await axiosInstance.post(`/messages/send/${selectedUser._id}`,messageData)
       set({messages:messages.concat(res.data)})

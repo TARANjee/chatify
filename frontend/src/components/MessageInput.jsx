@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import { useChatStore } from '../store/useChatStore'
-import { ImageIcon, XIcon } from 'lucide-react'
+import { ImageIcon, SendIcon, XIcon } from 'lucide-react'
 function MessageInput() {
   const [text, setText] = useState('')
   const [imagePreview, setimagePreview] = useState(null)
@@ -78,17 +78,17 @@ function MessageInput() {
         <button
           type='button'
           onClick={() => fileInputRef.current.click()}
-          className={`bg-slate-800/50 text-slate-400 hover:text-slate-200 rounded-lg px-4 transition-colors ${
-            imagePreview ? "text-cyan-500" : ""
-          }`}
+          className={`bg-slate-800/50 text-slate-400 hover:text-slate-200 rounded-lg px-4 transition-colors ${imagePreview ? "text-cyan-500" : ""
+            }`}
         >
           <ImageIcon className='w-5 h-5' />
         </button>
         <button
-          type='submit'
-          className='bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full transition-colors'
+          type="submit"
+          disabled={!text.trim() && !imagePreview}
+          className="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white rounded-lg px-4 py-2 font-medium hover:from-cyan-600 hover:to-cyan-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Send
+          <SendIcon className="w-5 h-5" />
         </button>
       </form>
     </div>
