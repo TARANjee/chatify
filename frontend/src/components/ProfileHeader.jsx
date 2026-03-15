@@ -6,6 +6,7 @@ function ProfileHeader() {
     const { authUser, logout, updateProfile } = useAuthStore()
     const [selectedImage, setSelectedImage] = useState(null)
     const fileInputRef = useRef(null)
+    
 
     const handleImageUpload = (e) => {
         const file = e.target.files[0]
@@ -20,6 +21,7 @@ function ProfileHeader() {
             await updateProfile({ profilepic: base64Image})
         }
      }
+     console.log("Authenticated user in ProfileHeader:", authUser) // Debugging line
 
     return (
         <div className="p-6 border-b border-slate-700/50 ">

@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { useChatStore } from "../store/useChatStore";
 import UsersLoadingSkeleton from "./UsersLoadingSkeleton";
+import { useAuthStore } from "../store/useAuthStore";
 
 function ContactList() {
   const { getAllContact, allContacts, setSelectedUser, isUsersLoading } = useChatStore();
+  const { onlineUsers } = useAuthStore();
 
-
+  console.log("All contacts in ContactList:", onlineUsers);
   useEffect(() => {
     getAllContact();
   }, [getAllContact]);
@@ -21,8 +23,8 @@ function ContactList() {
           onClick={() => setSelectedUser(contact)}
         >
           <div className="flex items-center gap-3">
-            {/* TODO: add online status and make work with socket */}
-            <div className={`avatar online`}>
+
+            <div className={`avatar ${onlineUsers.includes(contact._id) ? "online" : "offline"}`}>
               <div className="size-12 rounded-full">
                 <img src={contact.profilepic || "/avatar.png"} alt={contact.username} />
               </div>
