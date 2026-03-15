@@ -36,7 +36,7 @@ function ChatHeader() {
 
                 <div>
                     <h3 className="text-slate-200 font-medium">{selectedUser.username}</h3>
-                    <p className="text-slate-400 text-sm">{isOnline?"online":"offine"}</p>
+                    <p className="text-slate-400 text-sm">{isOnline?"online":"offline"}</p>
                 </div>
             </div>
 
