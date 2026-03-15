@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useChatStore } from '../store/useChatStore'
 import { useAuthStore } from '../store/useAuthStore'
 import ChatHeader from './ChatHeader'
@@ -9,11 +9,17 @@ import MessageInput from './MessageInput'
 function ChatContainer() {
   const { selectedUser, getMessagesByUserId, messages,isMessagesLoading } = useChatStore()
   const { authUser } = useAuthStore()
+  const messageEndRef = useRef(null)
 
   useEffect(() => {
     getMessagesByUserId(selectedUser._id);
   }, [selectedUser, getMessagesByUserId])
 
+  useEffect(() => {
+    if(messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" })
+    }
+  }, [messages])
 
   return (
     <>
@@ -22,8 +28,8 @@ function ChatContainer() {
         {messages.length && !isMessagesLoading > 0 ? (
           <div className='max-w-3xl mx-auto space-y-6'>
             {messages.map(msg => (
-              <div key={msg._id} className={`chat ${msg.senderId == authUser._id ? "chat-end" : "chat-start"}`} >
-                <div className={`chat-bubble relative ${msg.senderId == authUser._id
+              <div key={msg._id} className={`chat ${msg.senderId == authUser.user._id ? "chat-end" : "chat-start"}`} >
+                <div className={`chat-bubble relative ${msg.senderId == authUser.user._id
                   ? "bg-cyan-600 text-white"
                   : "bg-slate-800 text-slate-200"
                   }`}>
@@ -37,6 +43,8 @@ function ChatContainer() {
                 </div>
               </div>
             ))}
+            {/* scroll target */}
+            <div ref={messageEndRef} />
           </div>
         ) : isMessagesLoading ?<MessagesLoadingSkeleton/>: (
           <NoChatHistoryPlaceholder name={selectedUser.username} />
