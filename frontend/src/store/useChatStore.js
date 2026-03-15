@@ -1,6 +1,7 @@
 import { axiosInstance } from "../lib/axios";
 import { create } from "zustand";
 import toast from "react-hot-toast";
+import { useAuthStore } from "./useAuthStore";
 
 export const useChatStore = create((set, get) => ({
   allContacts: [],
@@ -53,6 +54,36 @@ export const useChatStore = create((set, get) => ({
     } finally {
       set({ isMessagesLoading: false });
     }
-  }
+  },
+  sendMessage: async (messageData)=>{
+    const { selectedUser,messages } = get();
+   const { authUser } = useAuthStore.getState();
+    const senderId = authUser?.user?._id ?? authUser?._id;
 
+    if (!selectedUser?._id || !senderId) {
+      toast.error("Unable to send message right now");
+      return;
+    }
+const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+const optimisticMessage = {
+  _id: tempId,
+  senderId,
+  receiverId: selectedUser._id,
+  text: messageData.text,
+  image: messageData.image,
+  createdAt: new Date().toISOString(),
+  isOptimistic: true,
+};
+// Add the optimistic message to the UI immediately
+set((state) => ({ messages: [...state.messages, optimisticMessage] }));
+    try {
+      const res=await axiosInstance.post(`/messages/send/${selectedUser._id}`,messageData)
+      set({messages:messages.concat(res.data)})
+    } catch (error) {
+       toast.error(error.response?.data?.message || "Something went wrong");
+        // Remove the optimistic message from the UI
+        set({messages:messages})
+      }
+
+  }
 }));
