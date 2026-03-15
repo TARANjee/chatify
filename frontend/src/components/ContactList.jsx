@@ -23,7 +23,7 @@ function ContactList() {
         >
           <div className="flex items-center gap-3">
 
-            <div className={`avatar ${onlineUsers?.includes(contact._id) ? "online" : "offline"}`}>
+            <div className={`avatar ${onlineUsers && onlineUsers?.includes(contact._id) ? "online" : "offline"}`}>
               <div className="size-12 rounded-full">
                 <img src={contact.profilepic || "/avatar.png"} alt={contact.username} />
               </div>
