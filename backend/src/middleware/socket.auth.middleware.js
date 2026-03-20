@@ -6,7 +6,7 @@ export const socketAuthMiddleware = async (socket, next) => {
   try {
     // extract token from http-only cookies
     const token = socket.handshake.headers.cookie
-      ?.split("; ")
+      ?.split(";")
       .find((row) => row.startsWith("jwt="))
       ?.split("=")[1];
 
