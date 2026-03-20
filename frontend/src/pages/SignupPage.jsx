@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { useAuthStore } from '../store/useAuthStore'
-import { MailIcon,LockIcon,LoaderIcon, MessageCircleIcon, UserIcon } from 'lucide-react'
+import { MailIcon, LockIcon, LoaderIcon, MessageCircleIcon, UserIcon } from 'lucide-react'
 import BorderAnimatedContainer from '../components/BorderAnimatedContainer'
 import { Link } from 'react-router'
 
 function SignupPage() {
   const [formData, setFormData] = useState({
-    fullname: '',
+    username: '',
     email: '',
     password: ''
   })
@@ -40,18 +40,18 @@ function SignupPage() {
 
                 {/* FORM */}
                 <form onSubmit={handleSubmit} className="space-y-6">
-                 {/* FULL Name */}
+                  {/* FULL Name */}
                   <div>
                     <label className="auth-input-label">Full Name</label>
                     <div className="relative">
                       <UserIcon className="auth-input-icon" />
                       <input
                         type="text"
-                        value={formData.fullname}
+                        value={formData.username}
                         onChange={(e) =>
                           setFormData({
                             ...formData,
-                            fullname: e.target.value,
+                            username: e.target.value,
                           })
                         }
                         className="input"
@@ -102,13 +102,13 @@ function SignupPage() {
                   <button className='auth-btn' type='submit' disabled={isSigningUp}>
                     {isSigningUp ? (
                       <LoaderIcon className="w-full animate-spin text-center" />
-                    ):(
+                    ) : (
                       'Create Account'
                     )}
                   </button>
                 </form>
 
-                <div className="text-center mt-6">  
+                <div className="text-center mt-6">
                   <Link to="/login" className="auth-link">Already have an account? Login</Link>
                 </div>
 

@@ -7,7 +7,7 @@ function ProfileHeader() {
     const { authUser, logout, updateProfile } = useAuthStore();
     const [selectedImage, setSelectedImage] = useState(null);
     const fileInputRef = useRef(null);
-
+    console.log("Auth User in ProfileHeader:", authUser);
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
         if (!file) return;
